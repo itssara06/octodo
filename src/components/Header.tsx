@@ -1,21 +1,11 @@
 import Link from 'next/link';
-import { Search, Bell, LogOut, Users as UsersIcon } from 'lucide-react';
+import { Search, Bell } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  DropdownMenuGroup,
-} from '@/components/ui/dropdown-menu';
-import { logoutAction } from '@/app/actions/auth';
 import { getSession } from '@/lib/session';
 import { getDb } from '@/db';
 import { users } from '@/db/schema';
 import { eq } from 'drizzle-orm';
-import { ProfileDialog } from '@/components/ProfileDialog';
+import { UserDropdown } from '@/components/UserDropdown';
 
 export async function Header() {
   const session = await getSession();
@@ -46,30 +36,7 @@ export async function Header() {
           <Bell className="h-5 w-5" />
           <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-primary" />
         </button>
-        
-        <DropdownMenu>
-          <DropdownMenuTrigger 
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 ring-2 ring-background focus:outline-none text-white text-xs font-bold"
-          >
-            {userName.charAt(0).toUpperCase()}
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <ProfileDialog initialName={userName} email={userEmail} />
-              </DropdownMenuGroup>
-            <form action={logoutAction}>
-              <DropdownMenuItem 
-                variant="destructive"
-                render={<button type="submit" className="w-full" />}
-              >
-                <LogOut className="mr-2 h-4 w-4" />
-                Log out
-              </DropdownMenuItem>
-            </form>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <UserDropdown userName={userName} userEmail={userEmail} />
       </div>
     </header>
   );
