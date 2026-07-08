@@ -4,7 +4,7 @@ import { SidebarNav } from './SidebarNav';
 export async function Sidebar() {
   const { user } = await getSession();
   console.log('DEBUG USER MODEL:', user);
-  const userRole = user?.role || user?.Role;
+  const userRole = user?.role;
   const isSuperAdmin = typeof userRole === 'string' && userRole.toLowerCase() === 'admin';
 
   return (
