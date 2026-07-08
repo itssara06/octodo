@@ -1,5 +1,6 @@
 import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
+import { cache } from 'react';
 
 const secretKey = process.env.SESSION_SECRET || 'super-secret-key-replace-me';
 const encodedKey = new TextEncoder().encode(secretKey);
@@ -8,6 +9,7 @@ export type SessionPayload = {
   userId: string;
   email: string;
   role: string;
+  name?: string;
   expiresAt: Date;
 };
 
@@ -25,7 +27,7 @@ export async function createSession(payload: Omit<SessionPayload, 'expiresAt'>) 
   });
 }
 
-export async function getSession() {
+export const getSession = cache(async () => {
   const cookieStore = await cookies();
   const session = cookieStore.get('session')?.value;
   if (!session) return { user: null, isValid: false };
@@ -38,11 +40,12 @@ export async function getSession() {
     user: {
       id: payload.userId,
       email: payload.email,
-      role: payload.role
+      role: payload.role,
+      name: payload.name
     }, 
     isValid: true 
   };
-}
+});
 
 export async function clearSession() {
   const cookieStore = await cookies();

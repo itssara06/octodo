@@ -33,6 +33,16 @@ export async function updateProfile(formData: FormData) {
   
   try {
     await db.update(users).set(updates).where(eq(users.id, session.user.id));
+    
+    // Update the JWT cookie with the new name
+    const { createSession } = await import('@/lib/session');
+    await createSession({
+      userId: session.user.id,
+      email: session.user.email,
+      role: session.user.role,
+      name: name
+    });
+    
     revalidatePath("/");
     return { success: true };
   } catch (error: any) {

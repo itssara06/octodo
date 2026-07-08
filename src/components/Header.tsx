@@ -14,11 +14,7 @@ export async function Header() {
   
   if (session.isValid && session.user) {
     userEmail = session.user.email;
-    const db = getDb();
-    const [dbUser] = await db.select({ name: users.name }).from(users).where(eq(users.id, session.user.id)).limit(1);
-    if (dbUser) {
-      userName = dbUser.name || session.user.email.split('@')[0];
-    }
+    userName = session.user.name || session.user.email.split('@')[0];
   }
 
   return (
