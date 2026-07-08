@@ -23,7 +23,7 @@ const navigation = [
   { name: 'Notes', href: '/notes', icon: StickyNote },
   { name: 'Bookmarks', href: '/bookmarks', icon: Bookmark },
   { name: 'Journal', href: '/journal', icon: BookOpen },
-  { name: 'Users', href: '/users', icon: Users },
+  { name: 'Users', href: '/users?v=1', icon: Users },
   { name: 'Database', href: '/database', icon: Database },
   { name: 'Archive', href: '/archive', icon: Archive },
 ];

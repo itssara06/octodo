@@ -1,4 +1,4 @@
-import { getSession } from '@/lib/pb';
+import { getSession } from "@/lib/session";
 import { SidebarNav } from './SidebarNav';
 
 export async function Sidebar() {

@@ -1,4 +1,4 @@
-import { getSession } from "@/lib/pb";
+import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 
 export default async function UsersLayout({ children }: { children: React.ReactNode }) {
