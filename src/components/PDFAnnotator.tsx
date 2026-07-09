@@ -104,7 +104,7 @@ export function PDFAnnotator({ document }: { document: any }) {
           canvas.width = viewport.width;
           canvas.height = viewport.height;
           
-          await page.render({ canvasContext: ctx!, viewport }).promise;
+          await page.render({ canvasContext: ctx!, viewport, canvas }).promise;
           const dataUrl = canvas.toDataURL("image/jpeg", 0.8);
           
           pages.push({ dataUrl, width: viewport.width, height: viewport.height, pageNum: i });
@@ -150,7 +150,7 @@ export function PDFAnnotator({ document }: { document: any }) {
         const activeObjects = canvas.getActiveObjects();
         if (activeObjects.length > 0) {
           // Don't delete if we are currently editing text
-          if (activeObjects.length === 1 && activeObjects[0].isEditing) return;
+          if (activeObjects.length === 1 && (activeObjects[0] as any).isEditing) return;
           
           activeObjects.forEach(obj => canvas.remove(obj));
           canvas.discardActiveObject();
@@ -189,7 +189,7 @@ export function PDFAnnotator({ document }: { document: any }) {
 
       // Erasing
       if (currentMode === 'eraser') {
-        if (opt.target && !opt.target.id?.startsWith('pdf_page_')) {
+        if (opt.target && !(opt.target as any).id?.startsWith('pdf_page_')) {
           canvas.remove(opt.target);
           canvas.requestRenderAll();
           canvas.fire('object:modified');
@@ -268,11 +268,11 @@ export function PDFAnnotator({ document }: { document: any }) {
       const currentMode = modeRef.current;
 
       if (isPanning) {
-        const vpt = this.viewportTransform;
+        const vpt = canvas.viewportTransform;
         if (vpt) {
           vpt[4] += evt.clientX - lastPosX;
           vpt[5] += evt.clientY - lastPosY;
-          this.requestRenderAll();
+          canvas.requestRenderAll();
           lastPosX = evt.clientX;
           lastPosY = evt.clientY;
         }
@@ -327,7 +327,7 @@ export function PDFAnnotator({ document }: { document: any }) {
     // Eraser drag behavior
     canvas.on('mouse:over', function(opt) {
       if (modeRef.current === 'eraser' && opt.e.buttons === 1) { // Left mouse button down
-        if (opt.target && !opt.target.id?.startsWith('pdf_page_')) {
+        if (opt.target && !(opt.target as any).id?.startsWith('pdf_page_')) {
           canvas.remove(opt.target);
           canvas.requestRenderAll();
           canvas.fire('object:modified');
@@ -514,7 +514,7 @@ export function PDFAnnotator({ document }: { document: any }) {
 
       // 4. Save and trigger download
       const mergedPdfBytes = await pdfDoc.save();
-      const blob = new Blob([mergedPdfBytes], { type: "application/pdf" });
+      const blob = new Blob([mergedPdfBytes as any], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
       const a = window.document.createElement("a");
       a.href = url;
