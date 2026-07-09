@@ -1,5 +1,6 @@
 import { getSession } from "@/lib/session";
 import { SidebarNav } from './SidebarNav';
+import { Home, FolderKanban, BookOpen, Settings } from 'lucide-react';
 
 export async function Sidebar() {
   const { user } = await getSession();

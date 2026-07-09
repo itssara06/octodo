@@ -9,3 +9,15 @@ export const users = pgTable('users', {
   status: text('status').notNull().default('Active'),
   createdAt: timestamp('created_at').notNull(),
 });
+
+export const documents = pgTable('documents', {
+  id: text('id').primaryKey(),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  name: text('name').notNull(),
+  fileUrl: text('file_url').notNull(),
+  thumbnailUrl: text('thumbnail_url'),
+  fileType: text('file_type').notNull().default('pdf'),
+  annotationsData: text('annotations_data'), // JSON string of drawing paths/shapes
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
